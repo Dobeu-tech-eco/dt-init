@@ -1,0 +1,44 @@
+{
+  "name": "dt-init",
+  "displayName": "DT Init",
+  "version": "6.0.2",
+  "description": "Plan, build, review and ship software changes in Claude Code with checkpoints and a pull request receipt.",
+  "author": {
+    "name": "Dobeu Tech Solutions LLC",
+    "url": "https://dobeu.net"
+  },
+  "homepage": "https://github.com/Dobeu-tech-eco/dt-init",
+  "repository": "https://github.com/Dobeu-tech-eco/dt-init",
+  "license": "MIT",
+  "keywords": [
+    "harness",
+    "multi-agent",
+    "pipeline",
+    "monorepo",
+    "agent-sdk",
+    "wsl"
+  ],
+  "privacyPolicyUrl": "https://dobeu.net/privacy",
+  "userConfig": {
+    "knowledge_endpoint": {
+      "type": "string",
+      "title": "Knowledge endpoint",
+      "description": "HTTPS MCP URL for your Cloudflare knowledge store"
+    },
+    "knowledge_token": {
+      "type": "string",
+      "title": "Knowledge token",
+      "description": "Bearer token for your Cloudflare knowledge store",
+      "sensitive": true
+    }
+  },
+  "mcpServers": {
+    "knowledge": {
+      "type": "http",
+      "url": "${user_config.knowledge_endpoint}",
+      "headers": {
+        "Authorization": "Bearer ${user_config.knowledge_token}"
+      }
+    }
+  }
+}
