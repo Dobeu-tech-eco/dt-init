@@ -29,4 +29,4 @@ Use the instructions in `skills/` and the roles in `agents/`. Follow the reposit
 
 This repository publishes a one-way release export. Use `claude plugin validate --profile directory --strict .` to check the plugin locally. The directory's review runs separately.
 
-[Changelog](CHANGELOG.md) · [MIT License](LICENSE.txt)
+[MIT License](LICENSE.txt)

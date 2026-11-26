@@ -3,7 +3,7 @@ name: action-items
 description: "Show open action items (Secrets, Decisions, Handoff, Deploy, Promotions) with age, owner and resolving command; mark done, add, or assign. Use when asked what is left, what is blocked on me, action items, or to hand this to another agent."
 ---
 
-> Directory edition: do not run bundled scripts or hooks, a package launcher, or a download piped into a shell. Do not read tokens or credential files from the machine. Carry out the step with Read, Edit, Grep, Glob, and git or gh, and write the files the step names.
+> Directory edition: Use Claude Code’s built-in tools. Do not execute bundled scripts or hooks or invoke package launchers. Follow the publisher’s installation documentation for any missing third-party tool. Do not read tokens or credential files from the machine. Carry out the step with Read, Edit, Grep, Glob, and git or gh, and write the files the step names.
 
 # Action items — what is still open and who owns it
 

@@ -2,7 +2,7 @@
 
 How to talk to the harness, which command to reach for, and the rules every role follows. It is for a person, or an AI coding assistant, who lands in a repo that uses the harness and needs to act without reading every skill file.
 
-The exhaustive reference is `INVENTORY.md` (every skill, agent file, hook, script and `lanes.py` subcommand). Exact syntax is in `COMMANDS.md`. Internals are in `../ARCHITECTURE.md`. Full release notes are in `../CHANGELOG.md`.
+The exhaustive reference is `INVENTORY.md` (every skill, agent file, hook, script and `lanes.py` subcommand). Exact syntax is in `COMMANDS.md`. Internals are in `../ARCHITECTURE.md`.
 
 Install DT Init using the [public README](../README.md#for-people). The command namespace is `/dt-init:<command>`.
 
@@ -242,7 +242,7 @@ Three roles run parallel work. The skills use these words the same way every tim
 - may report only `pr-open`, `done`, `blocked` or `incomplete`, and stops at `pr-open`: the head publishes (push, PR) with `lanes.py publish` and merges;
 - never merges, never runs `merge-go`, `reconcile`, `dpp`, `setup`, `onboard`, never starts another son, never writes `lessons.md` (lessons go in its `report.md`);
 - asks the head, not the user, through the mailbox (`questions/<n>.json`); user prompts become need-human;
-- runs without `a GitHub token` or the SSH agent socket or cloud credentials and, since an API key always beats the Max login in `claude -p`, no `*_API_KEY`, `ANTHROPIC_*`, `CODEX_*`, `XAI_*`, `OPENAI_*`, `AWS_*` or `CLAUDE_CODE_USE_*` variable (a stray key never bills the API account; `CLAUDE_CODE_OAUTH_TOKEN` is kept for Claude), unless `DTS2_SON_ENV_PASS` names them (the owner's deliberate way to hand a son a key; an `auth: api-key` agent receives only its own key, codex's is `the Codex API key`), under `guard.py --mode son` as the deny hook.
+- runs without `a GitHub token` or the SSH agent socket or cloud credentials and, since an API key always beats the Max login in `claude -p`, no `*_API_KEY`, `ANTHROPIC_*`, `CODEX_*`, `XAI_*`, `OPENAI_*`, `AWS_*` or `CLAUDE_CODE_USE_*` variable (a stray key never bills the API account; Claude CLI sign-in is kept for Claude), unless `DTS2_SON_ENV_PASS` names them (the owner's deliberate way to hand a son a key; an `auth: api-key` agent receives only its own key, codex's is `the Codex API key`), under `guard.py --mode son` as the deny hook.
 
 **Council.** Sits only when three full rounds of the autopilot gate fail (`council.py eligible`). Five frontier seats across as many providers as are usable (`council.py seats`); each reads the full dossier of the step and votes; ballots are fenced (`council.py wrap`), blind (`council.py blind` strips authorship and shuffles options), and a seat that times out is swapped (`seat_swap.py`). Every dissenting seat writes a brief. the latest frontier Claude Chairman heads the council and decides: more fixes (at most two rounds), strike items (each becomes a Decisions action item) or approve, and its record must answer every dissent. The council is written to `.harness/council.md` and summarised in the PR, the receipt and `check-in`. One council per step; it never overrides a hard stop or branch protection.
 
@@ -263,11 +263,9 @@ Three roles run parallel work. The skills use these words the same way every tim
 
 ## 5. Release history
 
-How to read the changelogs: `../CHANGELOG.md` holds every released version (open the `## [3.11.0]` or `## [3.10.0]` section), the `## Unreleased` section of `../README.md` holds work not yet released, and `../changelog.d/` holds one fragment per batch that the release step joins into those files. `COMMANDS.md` section 8 says how to read a section.
 
 ### 3.11.0
 
-Full notes: `../CHANGELOG.md` section `[3.11.0]`; per-command detail: `INVENTORY.md` section 9.
 
 - Head policy gate: `hooks/policy-gate.sh` and `templates/policy.json` deny force-push, `--admin`, deploy CLIs, `gh secret`, `vercel env` and a bare `env` for the head and every son; merges need a human approval (per PR, or the standing `merge_policy: auto-when-green` grant for direct merges pinned to a head sha once the required checks are green).
 - Son containment: the head pushes, opens and merges son PRs (`lanes.py publish`, `head_publish.py`); protected paths; human-only approvals in `.claude/settings.local.json` (`dts2_approvals`); allowlisted provider environment; council ballots carry a `.dispatch.json` record.
@@ -281,7 +279,6 @@ Full notes: `../CHANGELOG.md` section `[3.11.0]`; per-command detail: `INVENTORY
 
 ### 3.10.0
 
-Full notes: `../CHANGELOG.md` section `[3.10.0]`; per-command detail: `INVENTORY.md` section 7.
 
 New commands and surfaces:
 

@@ -3,7 +3,7 @@ name: dpp
 description: "Run several autopilot lanes in parallel as headless sons, one worktree each, under a head that plans lanes, supervises, serialises merges and writes one report. Use when the user says dpp, parallel autopilot, or work several check-in items at once."
 ---
 
-> Directory edition: do not run bundled scripts or hooks, a package launcher, or a download piped into a shell. Do not read tokens or credential files from the machine. Carry out the step with Read, Edit, Grep, Glob, and git or gh, and write the files the step names.
+> Directory edition: Use Claude Code’s built-in tools. Do not execute bundled scripts or hooks or invoke package launchers. Follow the publisher’s installation documentation for any missing third-party tool. Do not read tokens or credential files from the machine. Carry out the step with Read, Edit, Grep, Glob, and git or gh, and write the files the step names.
 
 # dpp — parallel autopilot under one head
 

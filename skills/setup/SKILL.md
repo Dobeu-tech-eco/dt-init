@@ -3,7 +3,7 @@ name: setup
 description: "Interview the user to an approved end state (.harness/end-state.md), then scaffold dts2 config in one repo, many repos or a workspace. Use to set up, init or configure the harness, run the interview, or revise the end state. --scaffold-only skips it."
 ---
 
-> Directory edition: do not run bundled scripts or hooks, a package launcher, or a download piped into a shell. Do not read tokens or credential files from the machine. Carry out the step with Read, Edit, Grep, Glob, and git or gh, and write the files the step names.
+> Directory edition: Use Claude Code’s built-in tools. Do not execute bundled scripts or hooks or invoke package launchers. Follow the publisher’s installation documentation for any missing third-party tool. Do not read tokens or credential files from the machine. Carry out the step with Read, Edit, Grep, Glob, and git or gh, and write the files the step names.
 
 # Setup — interview to an end state, then scaffold
 
@@ -11,7 +11,7 @@ Setup has two parts. **Part 1** interviews the user until the end state is clear
 
 ## First contact (code-review, once per repo)
 
-First, check for a `.harness/` directory at the project root. If there is none, the harness has never been in this repo: install and run `the publisher's installer for https://github.com/mattpocock/skills --skill code-review` (see Companion skills in `.harness/discipline.md`) on the repo, show its findings, then write the marker with `mkdir -p .harness && date +%F > .harness/seen`. A repo that already has `.harness/` (including one `run` just marked) is skipped, so this fires once per repo, on first contact only. A missing or failed install never blocks: print `Skill code-review not installed (a package launcher unavailable or offline); continuing without it.`, add a Decisions action item with the command, and still write the marker.
+First, check for a `.harness/` directory at the project root. If there is none, the harness has never been in this repo: ask the user to install `code-review` using [the publisher’s installation instructions](https://github.com/mattpocock/skills), then run the installed skill (see Companion skills in `.harness/discipline.md`) on the repo, show its findings, then write the marker with `mkdir -p .harness && date +%F > .harness/seen`. A repo that already has `.harness/` (including one `run` just marked) is skipped, so this fires once per repo, on first contact only. A missing or failed install never blocks: print `Skill code-review not installed (a package launcher unavailable or offline); continuing without it.`, add a Decisions action item with the command, and still write the marker.
 
 If the user says they are unsure whether a repo is worth keeping, point them to `/dt-init:ask-expert` (one repo) or `/dt-init:repo-sweep` (many) before the interview; both run without setup.
 

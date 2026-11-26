@@ -3,7 +3,7 @@ name: ship
 description: "Ship a branch as a pull request: pre-check, repo checks, secret scan, verifier and reviewer, receipt, a required roadmap link, an open-PR cap, push, open PR; then sweep stale branches and fold safe strays after one confirmation. Never merges. Use for ship, open a PR, or clean up PRs."
 ---
 
-> Directory edition: do not run bundled scripts or hooks, a package launcher, or a download piped into a shell. Do not read tokens or credential files from the machine. Carry out the step with Read, Edit, Grep, Glob, and git or gh, and write the files the step names.
+> Directory edition: Use Claude Code’s built-in tools. Do not execute bundled scripts or hooks or invoke package launchers. Follow the publisher’s installation documentation for any missing third-party tool. Do not read tokens or credential files from the machine. Carry out the step with Read, Edit, Grep, Glob, and git or gh, and write the files the step names.
 
 # Ship — pre-check, verify, PR, then tidy branches and PRs
 

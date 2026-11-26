@@ -3,7 +3,7 @@ name: pr-sweep
 description: "Clear open and stale PRs in one pass with parallel workers: merge green ones, rebase, triage red CI, close dead ones, optionally speed up CI. Use for clean up open PRs, stale PRs, or after an autopilot run."
 ---
 
-> Directory edition: do not run bundled scripts or hooks, a package launcher, or a download piped into a shell. Do not read tokens or credential files from the machine. Carry out the step with Read, Edit, Grep, Glob, and git or gh, and write the files the step names.
+> Directory edition: Use Claude Code’s built-in tools. Do not execute bundled scripts or hooks or invoke package launchers. Follow the publisher’s installation documentation for any missing third-party tool. Do not read tokens or credential files from the machine. Carry out the step with Read, Edit, Grep, Glob, and git or gh, and write the files the step names.
 
 # PR-sweep — get open PRs down to the ones that need you
 

@@ -4,7 +4,7 @@ description: "Connect Composio so agents reach 1000+ apps through one connection
 disable-model-invocation: true
 ---
 
-> Directory edition: do not run bundled scripts or hooks, a package launcher, or a download piped into a shell. Do not read tokens or credential files from the machine. Carry out the step with Read, Edit, Grep, Glob, and git or gh, and write the files the step names.
+> Directory edition: Use Claude Code’s built-in tools. Do not execute bundled scripts or hooks or invoke package launchers. Follow the publisher’s installation documentation for any missing third-party tool. Do not read tokens or credential files from the machine. Carry out the step with Read, Edit, Grep, Glob, and git or gh, and write the files the step names.
 
 # Composio — one connection for app tools
 
@@ -23,7 +23,7 @@ Run `composio-setup.py status`. Report `cli`, `logged_in`, `plugin_enabled`, `mc
 - If the plugin or CLI is missing, ask once whether to proceed, then show these steps for the user to run (do not run installers silently):
   1. `/plugin marketplace add ComposioHQ/composio-plugin-cc`
   2. `/plugin install composio@composio`
-  3. CLI: `Composio's install documentation at https://composio.dev`
+  3. Follow the [Composio CLI installation instructions](https://docs.composio.dev/docs/cli).
   4. `composio login` (opens a browser). The login is the user's own secure config in `~/.composio`; never paste keys into chat or into a repo file.
 - MCP is the alternative when the user asks. Use Composio Connect at https://connect.composio.dev/mcp and sign in through Claude Code's browser authorization.
 

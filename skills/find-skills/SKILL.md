@@ -3,7 +3,7 @@ name: find-skills
 description: "Rescan the repo, audit every improvement option (skills, database tooling, hooks, MCP servers, plugins, commands, subagents, permissions, CI, docs), ask one to three questions, recommend a ranked set, and wire in the picks on a yes. Use when the user says find skills or how can I improve this setup."
 ---
 
-> Directory edition: do not run bundled scripts or hooks, a package launcher, or a download piped into a shell. Do not read tokens or credential files from the machine. Carry out the step with Read, Edit, Grep, Glob, and git or gh, and write the files the step names.
+> Directory edition: Use Claude Code’s built-in tools. Do not execute bundled scripts or hooks or invoke package launchers. Follow the publisher’s installation documentation for any missing third-party tool. Do not read tokens or credential files from the machine. Carry out the step with Read, Edit, Grep, Glob, and git or gh, and write the files the step names.
 
 # Find skills — rescan, audit, recommend, wire in
 
@@ -31,10 +31,10 @@ Composio: if `~/.dts2/composio-tools.json` exists (the Composio tool map), `impr
 ## 4. Wire in
 On the user's yes, handle only the picked items, per category:
 - **skills**: for each chosen skill:
-  1. Install it if missing, with `the publisher's installer for <source> --skill <name>` (mattpocock skills use `https://github.com/mattpocock/skills`), into the project only; never `-g`. A failed install prints `Skill <name> not installed (a package launcher unavailable or offline); continuing without it.` and becomes a Decisions action item.
+  1. Install it if missing, with the publisher’s installation instructions (mattpocock skills use `https://github.com/mattpocock/skills`), into the project only; never `-g`. A failed install prints `Skill <name> not installed (a package launcher unavailable or offline); continuing without it.` and becomes a Decisions action item.
   2. Append it to `.harness/keep.yaml` under `skills:` as `- name: <name>` / `source: <exact install command>` / `serves: harness`, so a setup re-run keeps it. Append only; never remove entries.
   3. Wire it into the run workflow: companion skills follow the table under Companion skills in `.harness/discipline.md`; for a skill outside that table add a row naming when `run` should invoke it, and add it to the `## Skills` table in `.harness/end-state.md` with its phase.
-- **database**: database tooling (db guard hooks, database MCP servers, deny rules for destructive commands, a migration check in CI, database skills). Never run migrations, resets, or destructive SQL. MCP servers are read-only by default, with credentials from env vars. Hooks go in through `hooks-setup.py apply --ids db-guard,migration-check --dry-run` first, then apply after the user confirms. Deny rules and CI follow the permissions and ci rules below.
+- **database**: database tooling (db guard hooks, database MCP servers, deny rules for destructive commands, a migration check in CI, database skills). Never run migrations, resets, or destructive SQL. MCP servers are read-only by default, with credentials entered through a sensitive plugin configuration option when the plugin provides one. Hooks go in through `hooks-setup.py apply --ids db-guard,migration-check --dry-run` first, then apply after the user confirms. Deny rules and CI follow the permissions and ci rules below.
 - **hooks**: run `python3 -I "${CLAUDE_PLUGIN_ROOT}/scripts/hooks-setup.py" apply --ids <picked ids> --dry-run`, show the result, then run the same command without `--dry-run`. It never overwrites existing hooks.
 - **mcp**: run `claude mcp add --scope project ...` only for the picked servers. Tokens go in environment variables the user sets; never type them into args or files.
 - **permissions**: show the exact lines first, back up `.claude/settings.json`, then append to `permissions.allow` or `permissions.deny`. Never remove entries. Remove a broad allow entry only when the user picks that item.
