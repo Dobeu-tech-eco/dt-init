@@ -2,7 +2,7 @@
 
 How to talk to the harness, which command to reach for, and the rules every role follows. It is for a person, or an AI coding assistant, who lands in a repo that uses the harness and needs to act without reading every skill file.
 
-The exhaustive reference is `INVENTORY.md` (every skill, agent file, hook, script and `lanes.py` subcommand). Exact syntax is in `COMMANDS.md`. Internals are in `../ARCHITECTURE.md`.
+The command catalog is in `COMMAND-GUIDE.md` and exact syntax is in `COMMANDS.md`. This directory edition is instruction-only: it ships skills, agent roles and templates, and no scripts or hooks.
 
 Install DT Init using the [public README](../README.md#for-people). The command namespace is `/dt-init:<command>`.
 
@@ -60,7 +60,7 @@ Arguments go after the command name, separated by spaces. Quote a task that cont
 /dt-init:learn promote L-012
 ```
 
-You never type scripts. Skills call them as `python3 -I "${CLAUDE_PLUGIN_ROOT}/scripts/<name>.py" <subcommand> ...`; each prints one JSON object on stdout. `INVENTORY.md` section 4 lists every script and flag.
+You never type scripts. In this directory edition there are no bundled scripts to run: each skill carries out its step with Claude Code's built-in tools and writes the files it names.
 
 The harness answers in a fixed shape:
 
@@ -294,7 +294,7 @@ New commands and surfaces:
 - Lessons with path globs, 90-day pruning, regression tracking; PreCompact handoff refresh; SubagentStop report contracts; one-page lead brief and ~4 KB son brief.
 - Production readiness: `prod-scaffold.py` (CI, `RUNBOOK.md`, `ops/`), `app-type-detect.py`, Production readiness table in `end-state.md`, Dependabot or Renovate offer in `setup`.
 - Tooling: `run_report.py`, `run_metrics.py`, `walkthrough_fallback.py`, `bump-version.py`, `make test`, `make doctor`, `make check-version`, `evals/run.py`, Hypothesis property tests, CI on Python 3.10 to 3.13.
-- Docs: `docs/INVENTORY.md` with a completeness test, `ARCHITECTURE.md`, this guide.
+- Docs: `COMMAND-GUIDE.md`, `docs/COMMANDS.md`, this guide.
 
 Behavior that changed:
 

@@ -23,6 +23,17 @@ See the [command guide](COMMAND-GUIDE.md) for the catalog. The workflows use Cla
 
 The knowledge store is a local folder you choose; DT Init ships no server for it and needs none. See [Knowledge](skills/knowledge/SKILL.md). Report issues in the [DT Init repository](https://github.com/Dobeu-tech-eco/dt-init/issues).
 
+## What this edition does and does not do
+
+This directory edition is instruction-only. It ships skills, agent roles, and templates — no bundled scripts, no hooks, and no MCP servers.
+
+- It collects no data, sends no data to any service, and retains nothing. The only files it creates or changes are the working files in your own repository that a step names.
+- It does not read tokens, API keys, or credential files from your machine. Enter any remote credentials through your own MCP client configuration.
+- It installs and downloads nothing. A companion skill is used only when you have already installed it; if one is missing, the step notes that and continues.
+- The knowledge store is a local folder you choose; DT Init ships no server for it and needs none.
+
+These statements describe the plugin as shipped in this repository; if any skill text ever appears to say otherwise, this section and the Directory edition note at the top of each skill govern.
+
 ## For agents
 
 Use the instructions in `skills/` and the roles in `agents/`. Follow the repository's approval rules and use the receipt check in the [ship skill](skills/ship/SKILL.md). Enter remote credentials through your own MCP client configuration. Use `YOUR_API_KEY` in examples.

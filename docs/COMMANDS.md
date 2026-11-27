@@ -2,7 +2,7 @@
 
 Every slash command, script, role and hook in this plugin, with the exact way to call each one. It is for people and for AI coding assistants (Claude Code, Codex, Cursor or any other) that need to run a command correctly.
 
-It follows the code: the `argparse` definitions in `scripts/lanes.py` and `scripts/*.py`, `skills/*/SKILL.md`, `agents/*.md` and `hooks/hooks.json`. For the reasons behind a command read `GUIDE.md`. For every command with its callers read `INVENTORY.md`. For internals read `../ARCHITECTURE.md`.
+It follows the shipped files: `skills/*/SKILL.md`, `agents/*.md` and the templates. For the reasons behind a command read `GUIDE.md`. This directory edition is instruction-only: it ships no scripts or hooks, and every step is carried out with Claude Code's built-in tools.
 
 > Migrating from the old names `dts2` or `dts2-harness`: the plugin is now `dt`, so commands are `/dt-init:<command>`. Run `/plugin uninstall dts2@dts2` (`dts2-harness@dts2` on a version before 4.0), `/plugin marketplace update dt-init`, `/plugin install dt-init@dt-init` and `/reload-plugins`. Settings and `.harness/` state are unchanged.
 
@@ -43,7 +43,7 @@ Most people need two parts of this page: section 4, the slash commands you type,
 
 ## 2. `lanes.py` subcommands (46)
 
-`lanes.py` is the only writer of lane state (leases, `status.json`, the budget counter, the model-call ledger, merge order, merge journal). Never edit the run folder by hand. Every subcommand has a row in `INVENTORY.md` section 4.5.
+Lane state (leases, `status.json`, the budget counter, the model-call ledger, merge order, merge journal) is written only by the lane step of the run skill. Never edit the run folder by hand.
 
 | Command | Role | What it does | Exact invocation | Writes / side effects |
 |---|---|---|---|---|
@@ -207,7 +207,7 @@ Typed as `/dt-init:<name>`. `user only` means `disable-model-invocation: true` i
 | `/dt-init:evolve` | user or model | Change the harness itself in its source repo: edit, validate, test, bump, commit; push only on an explicit yes. | `/dt-init:evolve [deploy]` | plugin source files, version, commit |
 | `/dt-init:loop` | user or model; explicit frozen definition required | Bounded research on one role file, frozen past-month receipt batch, one metric, strict keep/revert and no effect approval. | `/dt-init:loop <experiment.json>` | `.harness/research/<series>/definition.json`, frozen batch, append-only `runs.jsonl`, artifacts and `.harness/state.md` index; proposal to `ship` |
 | `/dt-init:action-items` | user or model | Show open Secrets, Decisions, Handoff, Deploy and Promotions items; mark done, add, assign. | `/dt-init:action-items [done <id> \| add <group> <text> \| assign <id> <agent>]` | action-items file |
-| `/dt-init:gtm` | user or model | Go-to-market pass: installs marketing-skills if missing, ends with a readiness scorecard. | `/dt-init:gtm` | readiness file, gitignore |
+| `/dt-init:gtm` | user or model | Go-to-market pass: uses marketing-skills when already installed, ends with a readiness scorecard. | `/dt-init:gtm` | readiness file, gitignore |
 | `/dt-init:ship` | user or model | Ship the current branch as a PR: checks, secret scan, verifier and reviewer, receipt, push, open PR; then sweep stale branches. Never merges. | `/dt-init:ship [base]` | receipt, push, PR, branch clean-up (after a yes) |
 | `/dt-init:feature` | user or model | Add a feature to the roadmap: clarity score, interview, end state updated, plan PR. Plans only. | `/dt-init:feature <description>` | end-state file, plan PR |
 | `/dt-init:autopilot` | user or model (a son runs it with `--son`) | Run harness steps unattended; a three-provider gate and a council replace the checkpoints. One branch and PR per step. | `/dt-init:autopilot <steps> \| resume \| status \| --son <stamp>/<lane>` | branches, PRs, receipts, council record |
@@ -388,4 +388,4 @@ Plain typing needs no command. A prompt is recorded as a fold (added to the ledg
 
 ## 8. Changelogs
 
-- Per-command detail for a release: `INVENTORY.md` section 9 (3.11.0) and section 7 (3.10.0); the one-page digest of both: `GUIDE.md` section 5.
+- Per-command detail for a release: `GUIDE.md` section 5.
