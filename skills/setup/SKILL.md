@@ -3,7 +3,7 @@ name: setup
 description: "Interview the user to an approved end state (.harness/end-state.md), then scaffold dts2 config in one repo, many repos or a workspace. Use to set up, init or configure the harness, run the interview, or revise the end state. --scaffold-only skips it."
 ---
 
-> Directory edition: Use Claude Code’s built-in tools. Do not execute bundled scripts or hooks or invoke package launchers. Follow the publisher’s installation documentation for any missing third-party tool. Do not read tokens or credential files from the machine. Carry out the step with Read, Edit, Grep, Glob, and git or gh, and write the files the step names.
+> Directory edition: Use Claude Code’s built-in tools only. Do not execute bundled scripts or hooks, do not install or download anything, and do not read tokens or credential files from the machine. Carry out the step with Read, Edit, Grep, Glob, and git or gh, and write the files the step names.
 
 # Setup — interview to an end state, then scaffold
 
@@ -11,7 +11,7 @@ Setup has two parts. **Part 1** interviews the user until the end state is clear
 
 ## First contact (code-review, once per repo)
 
-First, check for a `.harness/` directory at the project root. If there is none, the harness has never been in this repo: ask the user to install `code-review` using [the publisher’s installation instructions](https://github.com/mattpocock/skills), then run the installed skill (see Companion skills in `.harness/discipline.md`) on the repo, show its findings, then write the marker with `mkdir -p .harness && date +%F > .harness/seen`. A repo that already has `.harness/` (including one `run` just marked) is skipped, so this fires once per repo, on first contact only. A missing or failed install never blocks: print `Skill code-review not installed (a package launcher unavailable or offline); continuing without it.`, add a Decisions action item with the command, and still write the marker.
+First, check for a `.harness/` directory at the project root. If there is none, the harness has never been in this repo: use the already-installed `code-review` skill if it is present (if it is not installed, note that and continue without it), then run the installed skill (see Companion skills in `.harness/discipline.md`) on the repo, show its findings, then write the marker with `mkdir -p .harness && date +%F > .harness/seen`. A repo that already has `.harness/` (including one `run` just marked) is skipped, so this fires once per repo, on first contact only. A missing or failed install never blocks: print `Skill code-review not installed (not installed); continuing without it.`, add a Decisions action item with the command, and still write the marker.
 
 If the user says they are unsure whether a repo is worth keeping, point them to `/dt-init:ask-expert` (one repo) or `/dt-init:repo-sweep` (many) before the interview; both run without setup.
 
@@ -20,7 +20,7 @@ If the user says they are unsure whether a repo is worth keeping, point them to 
 Before anything else, run `python3 "${CLAUDE_PLUGIN_ROOT}/scripts/scope-check.py" .`.
 - `workspace-member` → ask once `This folder is a member of workspace <root>. Run setup at the workspace root instead? (y/n)`. Yes → continue with the workspace root as the project path.
 - `workspace-root` with an existing manifest → offer `Re-link the existing workspace (no interview) or revise the end state?`.
-- If `.harness/keep.yaml` exists at the effective root, read it and say `Keeping <n> plugins, <n> skills, <n> agents from .harness/keep.yaml`. Skip the install question for every listed skill (never re-ask), pre-include the listed agents in the Agents round (still show them), and never propose disabling a listed plugin (the Round 2d context scrub skips every keep.yaml entry too). A re-link or pivot re-run never rewrites keep.yaml except to append.
+- If `.harness/keep.yaml` exists at the effective root, read it and say `Keeping <n> plugins, <n> skills, <n> agents from .harness/keep.yaml`. Skip the install question for every listed skill (never re-ask), pre-include the listed agents in the Agents round (still show them), and never flag a listed plugin in the Round 2d duplicate report (it skips every keep.yaml entry too). A re-link or pivot re-run never rewrites keep.yaml except to append.
 
 ## Personal knowledge (optional, never blocks)
 

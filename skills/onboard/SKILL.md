@@ -4,7 +4,7 @@ description: "Explain the dts2 harness (eight agents, twenty-nine skills, roster
 disable-model-invocation: true
 ---
 
-> Directory edition: Use Claude Code’s built-in tools. Do not execute bundled scripts or hooks or invoke package launchers. Follow the publisher’s installation documentation for any missing third-party tool. Do not read tokens or credential files from the machine. Carry out the step with Read, Edit, Grep, Glob, and git or gh, and write the files the step names.
+> Directory edition: Use Claude Code’s built-in tools only. Do not execute bundled scripts or hooks, do not install or download anything, and do not read tokens or credential files from the machine. Carry out the step with Read, Edit, Grep, Glob, and git or gh, and write the files the step names.
 
 # dts2 harness — orientation
 
@@ -42,7 +42,7 @@ This skill explains only, except the skill-parity step and the optional hooks st
 | `check-in` | `/dt-init:check-in` is available any time: a read-only checklist from where the project started through the approved end state, each item marked complete or outstanding, with an `N of M complete` percent. |
 | `go` | `/dt-init:go` picks the next command from the repo's state on a fixed ladder and runs it, then repeats until a person is needed. `/dt-init:go status` shows the ladder; it stops at the roadmap approval and at `.harness/STOP`. |
 
-Setup and run pull in companion skills from mattpocock/skills at the moment they are needed (grill-me, improve-codebase-architecture, writing-for-agents, pr, resolve-merge-conflicts (from warpdotdev/common-skills, since mattpocock retired its version), plus ask-matt and research for your questions, improve-codebase-architecture again before tests, diagnosing-bugs again at the hard 5-round fix cap, loop-me when a run starts, setup-pre-commit once per repo at the commit gate, and code-review on first contact with a new repo), recorded in keep.yaml. A pre-check before every run command installs any that are missing, proposes updates for you to approve (it never updates them in bulk), swaps one that is gone upstream, refreshes plugin marketplaces, and when a newer harness is published saves your spot and upgrades; the next run finishes the upgrade itself (there is no separate upgrade command). After every ship, open harness lessons are offered through evolve automatically.
+Setup and run use companion skills at the moment they are needed (grill-me, improve-codebase-architecture, writing-for-agents, pr, resolve-merge-conflicts, plus ask-matt and research for your questions, improve-codebase-architecture again before tests, diagnosing-bugs again at the hard 5-round fix cap, loop-me when a run starts, setup-pre-commit once per repo at the commit gate, and code-review on first contact with a new repo), recorded in keep.yaml. Companions are used only when they are already installed: DT Init never installs, downloads or updates skills. A pre-check before every run command notes any that are missing so the user can install them himself if he wants them, and a missing companion never blocks the run. After every ship, open harness lessons are offered through evolve automatically.
 
 Setup maps the whole project into sections; `run` keeps builders busy on ready sections and parks stuck ones instead of stopping. The `run` skill pivots to the workspace root when started inside a member repo, and a context guard stops it and re-runs setup on a context spike.
 
@@ -76,7 +76,7 @@ Built-in API agents `claude-api`, `codex-api` and `grok-api` need only a key (`d
 After the agent list above, run `python3 "${CLAUDE_PLUGIN_ROOT}/scripts/roster.py" detect --project .` and pass every installed name to `python3 "${CLAUDE_PLUGIN_ROOT}/scripts/lead_skills.py" gaps --agents <names> --home "$HOME"`. For each entry in `behind`, say one line: `<agent> is behind the orchestrator: <reason>.` Then run `lead_skills.py sync --agents <those names> --home "$HOME"`. The sync is silent: do not ask. A non-lead may show an older `/dts2-harness` until this step, or until `/dt-init:model` makes it the lead. Claude is the source and is skipped.
 
 ## Where to start
-1. New repo or repos → `setup`. It confirms the agent roster first, then (Round 2d) runs one context scrub that finds duplicate plugins, skills, agents and MCP servers for every rostered agent and disables the extras after a yes. Nothing is pruned before the roster exists.
+1. New repo or repos → `setup`. It confirms the agent roster first, then (Round 2d) produces one duplicate report covering plugins, skills, agents and MCP servers for every rostered agent. Report only — nothing is changed. Nothing is reported before the roster exists.
 2. New machine or a heavy startup (many synced plugins, a large `CLAUDE.md`) → `machine-prep` for the machine-level budget and hygiene. It does not decide which duplicate to drop; that is the setup scrub, once the roster is known. Its last step shows a diff that adds the planning and PR rules to `~/.claude/CLAUDE.md` and writes it only after a yes.
 3. Any multi-file task → `run`.
 4. After a few runs → `learn`.
@@ -103,7 +103,7 @@ Worktrees are used only in workspace mode or when `use_worktrees: always` is set
 Builders never exceed the number of builder sections the lead planned, and never exceed `max_builders` in `.claude/dts2-harness.local.md`.
 
 ## Composio (optional)
-Ask once with AskUserQuestion: "Do you have a Composio account?" (yes or no). Composio is one connection to 1000+ apps, so agents need fewer separate plugins and MCP servers. On either answer, hand off to `/dt-init:composio`, which records the answer, installs and maps on yes, and offers a signup link on no. Skip the question if `~/.dts2/composio.json` already holds a decision. Nothing is changed here; `/dt-init:composio` asks before it disables anything.
+Ask once with AskUserQuestion: "Do you have a Composio account?" (yes or no). Composio is one connection to 1000+ apps, so agents need fewer separate plugins and MCP servers. On either answer, hand off to `/dt-init:composio`, which reports the overlap on yes and explains Composio on no. Nothing is changed here or there; `/dt-init:composio` is report-only.
 
 ## Hooks (optional last step)
 The plugin's own hooks are already active: the policy gate, the merge guard, the stop checks and the context guard. Toggles are in `.claude/dts2-harness.local.md`. This step offers extra hooks for the user's project.

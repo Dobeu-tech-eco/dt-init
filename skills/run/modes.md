@@ -1,4 +1,4 @@
-> Directory edition: Use Claude Code’s built-in tools. Do not execute bundled scripts or hooks or invoke package launchers. Follow the publisher’s installation documentation for any missing third-party tool. Do not read tokens or credential files from the machine. Carry out the step with Read, Edit, Grep, Glob, and git or gh, and write the files the step names.
+> Directory edition: Use Claude Code’s built-in tools only. Do not execute bundled scripts or hooks, do not install or download anything, and do not read tokens or credential files from the machine. Carry out the step with Read, Edit, Grep, Glob, and git or gh, and write the files the step names.
 
 # run — modes and status lines
 
@@ -24,5 +24,5 @@ Ship   — waiting at the ship checkpoint
 `run review-pr <number>` reviews an existing pull request (Rule 10.6).
 1. Run the Preflight steps that apply (config, ignore guard, roster, clean tree), then `gh pr checkout <number>`. Record the base branch from `gh pr view <number> --json baseRefName`.
 2. Run only Phase 3 (walkthrough, reviewers, final review), Phase 3b, Phase 3c and the verifier, on the PR diff against its base. No plan, no builders, no commits.
-3. If checking out or rebasing the PR hits a merge conflict, install and run `/resolve-merge-conflicts` before touching it by hand; if it cannot resolve cleanly, stop and hand it to the user. Show the findings by severity and the verifier verdict. Post them as a PR comment (`gh pr comment <number> --body-file <findings file>`) only on an explicit yes.
+3. If checking out or rebasing the PR hits a merge conflict, run the installed `/resolve-merge-conflicts` skill if it is present before touching it by hand; if it cannot resolve cleanly, stop and hand it to the user. Show the findings by severity and the verifier verdict. Post them as a PR comment (`gh pr comment <number> --body-file <findings file>`) only on an explicit yes.
 4. Never build, commit or push on a PR this run did not open.

@@ -1,4 +1,4 @@
-> Directory edition: Use Claude Code’s built-in tools. Do not execute bundled scripts or hooks or invoke package launchers. Follow the publisher’s installation documentation for any missing third-party tool. Do not read tokens or credential files from the machine. Carry out the step with Read, Edit, Grep, Glob, and git or gh, and write the files the step names.
+> Directory edition: Use Claude Code’s built-in tools only. Do not execute bundled scripts or hooks, do not install or download anything, and do not read tokens or credential files from the machine. Carry out the step with Read, Edit, Grep, Glob, and git or gh, and write the files the step names.
 
 # setup - Part 1, the interview (first rounds: repos, deploy target, other harnesses, agents)
 
@@ -87,8 +87,8 @@ Once that roster is final, run `python3 "${CLAUDE_PLUGIN_ROOT}/scripts/lead_skil
 
 Run this only once the roster is confirmed (Round 2c and Skill parity are done). It gives every rostered agent the same scrub, so Claude is not treated differently from Codex, Cursor or the rest.
 
-1. Run `python3 "${CLAUDE_PLUGIN_ROOT}/scripts/context_scrub.py" plan --roster <names> --project <repo> --json` with the confirmed names, comma-separated (without `--roster` it reads the roster from `.harness/config.yaml`). It lists each agent's plugins, skills, agents and subagents, and MCP servers, finds duplicates inside each agent, and writes one plan: keep one copy, disable the rest. The same order of preference applies to every agent: a copy listed in `.harness/keep.yaml`, then the marketplace-managed copy, then the first one found. A roster agent with no known config location is reported as `not inspectable` and skipped.
-2. Show the plan as a short table (category, name, keep, disable) from `plan` without `--json`. Say that nothing is deleted: plugins, MCP servers and list entries are switched off, files move to a sibling `<folder>-disabled` folder, and each changed config file gets a `.bak-<stamp>` copy first. Items marked `manual` are shipped by a plugin; name the plugin to disable and leave it to the user.
-3. Ask yes or no once. Never propose disabling anything in `keep.yaml` (the plan already protects it). On yes run `context_scrub.py apply --yes` with the same arguments and report the backup paths. On no, change nothing and carry on.
+1. With Read, Grep and Glob, inventory each rostered agent's plugins, skills, agents and subagents, and MCP servers, and find duplicates inside each agent. The same order of preference applies to every agent: a copy listed in `.harness/keep.yaml`, then the marketplace-managed copy, then the first one found. A roster agent with no known config location is reported as `not inspectable` and skipped.
+2. Show the result as a short table (category, name, recommended keep, duplicates found). Never flag anything in `keep.yaml`.
+3. Report only: DT Init never disables, moves or edits any plugin, skill, server or config file. The user applies any change himself in his own settings. Then carry on.
 
 Skip the round with no message when the plan finds no duplicates.

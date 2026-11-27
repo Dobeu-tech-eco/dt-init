@@ -3,7 +3,7 @@ name: gtm
 description: "Take a product through go-to-market in one pass: installs marketing-skills if missing, runs a short GTM deep-dive and the skills that apply, and ends with a launch-readiness scorecard. Use for go to market, launch readiness, gtm, or SEO review."
 ---
 
-> Directory edition: Use Claude Code’s built-in tools. Do not execute bundled scripts or hooks or invoke package launchers. Follow the publisher’s installation documentation for any missing third-party tool. Do not read tokens or credential files from the machine. Carry out the step with Read, Edit, Grep, Glob, and git or gh, and write the files the step names.
+> Directory edition: Use Claude Code’s built-in tools only. Do not execute bundled scripts or hooks, do not install or download anything, and do not read tokens or credential files from the machine. Carry out the step with Read, Edit, Grep, Glob, and git or gh, and write the files the step names.
 
 # GTM — one seamless pass
 
@@ -11,7 +11,7 @@ This command never hard-stops. If something is missing it installs it, falls bac
 
 ## 1. Ensure marketing-skills (never stop)
 - Already available? Check with `/plugin` or `ListPlugins`, or by whether the Skill tool can invoke `marketing-skills:<name>`. If so, use it.
-- If the skills are missing, direct the user to the [Marketing Skills installation instructions](https://github.com/coreyhaines31/marketingskills#installation). Continue once the user has installed the skills.
+- If the skills are missing, note that the marketing skills are not installed and continue without them; the user may install them himself if he wants them.
 - Only if that genuinely cannot run (offline, or a non-synced environment): print ONE line — enable `marketing-skills@synced` under synced plugins, or run `/plugin install marketing-skills@claude-cowork` — and continue with whatever is available.
 - Prefer the marketing-skills skills and do not hand-reimplement them when they are available.
 

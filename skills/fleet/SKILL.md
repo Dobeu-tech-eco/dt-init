@@ -3,7 +3,7 @@ name: fleet
 description: "See every harness session on this computer, read their status, logs and ledgers without interrupting them, and send one note, handoff, pause or knowledge finding to all of them. Use for list my sessions, what are all my harnesses doing, tell every session to hand off, or broadcast to all agents."
 ---
 
-> Directory edition: Use Claude Code’s built-in tools. Do not execute bundled scripts or hooks or invoke package launchers. Follow the publisher’s installation documentation for any missing third-party tool. Do not read tokens or credential files from the machine. Carry out the step with Read, Edit, Grep, Glob, and git or gh, and write the files the step names.
+> Directory edition: Use Claude Code’s built-in tools only. Do not execute bundled scripts or hooks, do not install or download anything, and do not read tokens or credential files from the machine. Carry out the step with Read, Edit, Grep, Glob, and git or gh, and write the files the step names.
 
 # Fleet — every harness session on this machine, and one message to all of them
 

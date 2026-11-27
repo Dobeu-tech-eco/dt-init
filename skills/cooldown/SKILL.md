@@ -3,7 +3,7 @@ name: cooldown
 description: "Pause an agent that hit a usage limit until its reset date, resume it, or list what is paused. Use for set a cooldown, agent is out of usage, clear a cooldown, or which agents are paused."
 ---
 
-> Directory edition: Use Claude Code’s built-in tools. Do not execute bundled scripts or hooks or invoke package launchers. Follow the publisher’s installation documentation for any missing third-party tool. Do not read tokens or credential files from the machine. Carry out the step with Read, Edit, Grep, Glob, and git or gh, and write the files the step names.
+> Directory edition: Use Claude Code’s built-in tools only. Do not execute bundled scripts or hooks, do not install or download anything, and do not read tokens or credential files from the machine. Carry out the step with Read, Edit, Grep, Glob, and git or gh, and write the files the step names.
 
 # Cooldown — pause an agent until its usage limit resets
 

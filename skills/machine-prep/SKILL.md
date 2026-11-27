@@ -1,86 +1,36 @@
 ---
 name: machine-prep
-description: "Scan this computer's agent tooling (plugins, agents, skills, CLAUDE.md, Codex, Cursor, MCP servers), compare to the blueprint profile, prune by disabling, and set up the slim startup. Use to clean up plugins, audit context budget, or set up a machine."
+description: "Audit this computer's agent tooling (plugins, agents, skills, MCP servers) against the blueprint profile and report what is enabled, what it costs in context, and where duplicates exist. Report only: this skill never disables, uninstalls or changes any plugin or setting. Use to review plugins or audit context budget."
 disable-model-invocation: true
 ---
 
-> Directory edition: Use Claude Code’s built-in tools. Do not execute bundled scripts or hooks or invoke package launchers. Follow the publisher’s installation documentation for any missing third-party tool. Do not read tokens or credential files from the machine. Carry out the step with Read, Edit, Grep, Glob, and git or gh, and write the files the step names.
+> Directory edition: Use Claude Code’s built-in tools only. Do not execute bundled scripts or hooks, do not install or download anything, and do not read tokens or credential files from the machine. Carry out the step with Read, Grep and Glob.
 
-# Machine prep — scan, prune, set up
+# Machine prep — audit and report
 
-Follows the agent-startup-blueprint rules. Prune means disable, never delete. Credentials are never read or printed.
+This skill audits the machine-level context budget: which plugins, agents, skills and MCP servers are enabled, where they come from, and what they cost. It reports findings and recommendations only. It never disables, uninstalls, moves or edits any plugin, skill, server or settings file — any change is the user's own action in their own settings, outside this skill.
 
-Scope: this skill handles the machine-level budget (claude.ai synced plugins, sync settings, context size, forbidden symlinks). It does not pick which copy of a duplicate plugin, skill, agent or MCP server to keep, because that depends on which agents are on the roster. That scrub runs in `/dt-init:setup` Round 2d once the roster is confirmed, with `context_scrub.py`, and it covers every rostered agent the same way. If the user has no roster yet, finish this skill's budget steps and point them to `/dt-init:setup`; do not dedupe plugins or agents here.
+The comparison profile defaults to the plugin's `profiles/blueprint.json`. A `profile` value in `.claude/dts2-harness.local.md` overrides it.
 
-Python: use `python3`; on Windows try `python` then `py -3`.
+## 1. Inventory (read-only)
+With Read, Grep and Glob, inventory:
+- Enabled plugins in the user's settings and each plugin's source (marketplace, claude.ai sync, or project settings).
+- Agent files in the user's agents folder, and agents that arrive inside enabled plugins, counted separately.
+- Installed skills, including any that sync from the user's account.
+- MCP servers the user has configured.
+- Any duplicate plugins, skills, agents or MCP servers (same capability arriving from two sources).
 
-## 1. Detect the environment
-Run `python3 "${CLAUDE_PLUGIN_ROOT}/scripts/env-detect.py"`.
-- If `wsl` is true and `claudeWrapsWindows` is true, the live Claude home is the Windows one. Run later steps with `--claude-home /mnt/c/Users/<user>/.claude`, or run them from Windows. Tell the user which home you are changing.
-- Never sync or copy agents, skills, plugins, or rules between the Windows and WSL homes.
+## 2. Explain the sources
+Report where the enabled set comes from, because that is what the user needs to act on themselves:
+- Plugins enabled on the user's claude.ai account sync into Claude Code at session start and load enabled.
+- Plugins a plugin or organisation marks required can only be changed by that organisation's admin.
+- A project's own settings can enable plugins for that project, overriding the user-level setting.
+- The blueprint's keep-set (`requiredByHarness` patterns in the profile, plus any `plugins:` list in a project's `.harness/keep.yaml`) names the plugins the harness's own skills depend on; flag these as keep in the report.
 
-## 2. Audit (read-only)
-Dispatch the `dt-init:auditor` agent, or run:
-`python3 "${CLAUDE_PLUGIN_ROOT}/scripts/machine-prep.py" audit [--profile <path>] [--claude-home <path>]`
-The profile defaults to the plugin's `profiles/blueprint.json`. A `profile` value in `.claude/dts2-harness.local.md` overrides it.
-
-If the auditor's report starts with `PARTIAL: hit turn cap at <step>`, the audit is incomplete: do not show it as the result; re-dispatch the auditor with a narrower scope or run the script form instead.
-
-Show the user: enabled plugins vs the keep-set, budget overruns, forbidden symlinks or sync scripts, and what is missing from the keep-set.
-
-Then explain where plugins are coming from, because this is why disabled plugins come back:
-- `syncedPluginsLoading` — plugins enabled on the user's claude.ai account. Claude Code re-downloads them into `~/.claude/plugins/synced/` at every session start and loads them as `<name>@synced`. New ones arrive enabled. This is usually the bulk of the context cost.
-- `syncedRequiredByOrg` — synced plugins the organization marks required. Only a claude.ai admin can turn these off; say so.
-- `projectEnablesOverridingYou` — plugins the current repo's `.claude/settings.json` enables, which beats the user setting. Fix per repo with `claude plugin disable <id> --scope local`.
-
-Then report agents in two separate counts, because the blueprint's 4-agent rule covers only one of them:
-- `claudeUserAgents` — files in `~/.claude/agents/`. This is the blueprint's 4-agent budget. These never sync to or from claude.ai.
-- `claudePluginAgents` and `pluginAgentsBySource` — agents that come inside enabled plugins, including every synced plugin. claude.ai has no separate agent sync; agents arrive only inside plugins, so turning off `syncClaudeAiPlugins` (or disabling the synced plugin) removes them. Budget is 6, which is exactly dts2-harness's own team (lead, builder, reviewer, verifier, scout, auditor). Name the top sources so the user sees which plugins cost the most.
-- `syncClaudeAiSkills` and `syncedSkillsOnDisk` — claude.ai skills sync separately from plugins into `~/.claude/skills/synced/`. Report only; turning it off also removes always-synced skills such as pdf and xlsx, so leave that choice to the user (`"syncClaudeAiSkills": false` in user settings).
-
-## 3. Pick a tier
-Run `... machine-prep.py plan --tier <light|standard|strict>` for each tier the user is weighing and show the exact diff. Without `--tier` the profile's `claude.defaultTier` (standard) is used. `--days N` sets the usage window (default 30). Show the three tiers in one table:
-
-| Tier | Stays on | Goes off | For |
-|---|---|---|---|
-| light | Everything used in the window, the profile keep-set, `syncClaudeAiPlugins` and `syncClaudeAiSkills` untouched | Plugins with zero use in the window (not org-required) | Someone who wants no surprises |
-| standard | Profile keep-set, the top `keepSyncedTopN` (5) used synced plugins, `keepSyncedPlugins` | Marketplace plugins outside the keep-set, all other synced plugins | Most people; the default |
-| strict | Profile keep-set only, plus any `requiredByHarness` synced plugin | `syncClaudeAiSkills: false`; `syncClaudeAiPlugins: false` when no required plugin is synced, otherwise every other synced plugin is set off one by one | A minimal, fast, predictable start |
-
-Then present, from the audit inventory:
-- `redundantAgentPacks` and `duplicateSkillNames` as information only ("these plugins ship the same agent files; skill X exists in A, B"). Do not choose a copy to drop here: say the duplicates are resolved for every rostered agent by the setup scrub (Round 2d) once the roster is confirmed. The tier plan below still switches synced plugins off by tier; that is budget, not duplicate removal.
-- The top 10 entries of `usage` (plugin -> calls in the window), so the choice rests on what they actually use.
-- The `requiredByHarness` keep. Plugins matching the profile's `requiredByHarness` patterns (for example `marketing-skills@synced`, `impeccable@*`) are never disabled in any tier; the plan prints `(requiredByHarness)` on their line. Say why: the harness's own skills depend on them. Inside a project with `.harness/keep.yaml`, its `plugins:` list counts as additional `requiredByHarness` entries (never disabled in any tier); say so in the plan output.
-
-Plugins added on claude.ai later arrive enabled in light and standard, so re-run the plan after adding some. Also list, as manual steps the script does not perform:
-- Extra files in `~/.claude/agents` beyond the budget (note it; which copy to keep is decided by the Round 2d scrub after the roster is confirmed).
-- Global MCP servers that belong in one project.
-- Codex plugin flags above budget.
-
-If `~/.dts2/composio-tools.json` exists (set up by `/dt-init:composio`), also run `python3 -I "${CLAUDE_PLUGIN_ROOT}/scripts/composio-setup.py" overlap` and include its candidates (plugins, MCP servers and skills Composio already covers) in the plan. Prune still means disable, never delete.
-
-Recommend one tier and ask which to use. That is the only tier question; step 4 is the approval gate.
-
-## 4. Approval gate
-Ask once, for the chosen tier: apply the plugin change, apply and also walk through the manual steps, or stop. Do nothing without a yes.
-
-## 5. Apply
-Run `... machine-prep.py apply --tier <chosen>`. It backs up `settings.json` to `<claude home>/backups/` before writing. Report the backup path.
-
-## 6. Set up the slim startup
-- Confirm `dt-init@dt-init` is enabled and `harness@harness`, `dts2@dts2` and `dts2-harness@dts2` (the old names) are disabled, so agents are not duplicated.
-- Point the user to the blueprint repo's `apply.ps1` (Windows) or `apply.sh` (WSL/Linux) for Codex agents and the weekly budget audit, if they want those too.
-- Remind them to restart Claude Code and to sign in with `claude auth login` on the binary they actually run.
-
-## 7. Add the planning and PR rules to CLAUDE.md
-The rules ask for short scannable plans (files and a check per step, assumptions, numbered open questions with a default), a Merge danger line on every PR (one-way or two-way door, and the blast radius), and a check instead of a new prose rule when a mistake recurs.
-1. Run `python3 "${CLAUDE_PLUGIN_ROOT}/scripts/claude-md-rules.py" check`. When it prints `current`, say the rules are already in place and stop.
-2. Run `... claude-md-rules.py plan` and show the user the diff it prints for `~/.claude/CLAUDE.md`. It writes nothing.
-3. Ask once: add these rules, or skip. Do nothing without a yes.
-4. On a yes run `... claude-md-rules.py apply` and report the backup path it prints.
-The block sits between `<!-- dts2-plan-rules:start -->` and `<!-- dts2-plan-rules:end -->`. A rerun replaces it in place and never duplicates it, and text outside the markers is never touched. To undo, delete the block or restore the backup.
+## 3. Report
+Show: enabled plugins vs the keep-set, the largest context costs by source, duplicates (as information only — which copy to keep is the user's call), and anything in the keep-set that is missing. Recommend, in plain terms, what the user might switch off in their own settings and what each change would save. Then stop. Applying any of it is the user's own step, outside this skill.
 
 ## Guardrails
-- Never uninstall. Uninstall only if the user names the plugin and says uninstall.
+- Report only. Never disable, uninstall, move or edit anything.
 - Never edit `.claude.json`, `auth.json`, or any credential file.
 - Never write API keys.

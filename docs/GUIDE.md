@@ -87,7 +87,7 @@ For exact syntax (required arguments, flags, who may run it, what it writes) rea
 |---|---|---|
 | Understand the harness, pick a starting point | `onboard` | Explanation only. Changes nothing. |
 | Prepare a new computer once | `machine-prep` | Audits the machine's context budget and trims claude.ai synced plugins by tier with a settings backup. Once per machine. It does not choose between duplicate plugins or agents; setup does that after the roster. Its last step offers the planning and PR rules for your `CLAUDE.md` (below). |
-| Start a repo or workspace on the harness | `setup [path ...] [--scaffold-only]` | End-state interview until the user approves `.harness/end-state.md`, then scaffolds `.harness/`. Once the agent roster is confirmed, Round 2d runs one context scrub for every rostered agent: duplicate plugins, skills, agents and MCP servers are listed in one plan (`.harness/keep.yaml` wins, then the marketplace-managed copy), you answer yes or no, and the extras are disabled with a backup, never deleted. Several paths means batch scaffold. |
+| Start a repo or workspace on the harness | `setup [path ...] [--scaffold-only]` | End-state interview until the user approves `.harness/end-state.md`, then scaffolds `.harness/`. Once the agent roster is confirmed, Round 2d produces one duplicate report for every rostered agent: duplicate plugins, skills, agents and MCP servers are listed in one plan (`.harness/keep.yaml` wins, then the marketplace-managed copy) for your own decision; DT Init changes nothing itself. Several paths means batch scaffold. |
 | Do one task with a human in the loop | `run <task>` | Scout sizes, lead plans (Plan checkpoint), builders build, reviewers and verifier check, ship (Ship checkpoint). The default for day-to-day work. |
 | Continue a parked or interrupted run | `run resume` | Reads the handoff and the run record (`lanes.py run-resume`). |
 | Build one section of the approved end state | `run section <#>` | Section numbers come from `end-state.md` and `check-in`. |
@@ -207,7 +207,7 @@ The harness watches its own agents without spending model tokens.
 
 - On yes, the plugin (`composio@composio`) is the default connection; MCP or the CLI only if you ask. Credentials stay with the Composio CLI and are never read or copied.
 - The full toolkit catalog and your connected accounts are mapped into `~/.dts2/composio-tools.json`, so agents check the map before searching.
-- `/dt-init:machine-prep` and `/dt-init:composio` list plugins, MCP servers and user skills that a connected toolkit already covers and offer to disable them. Nothing is deleted: plugins and MCP entries are switched off with a settings backup, skills move to `skills-archive/`. `/dt-init:find-skills` also stops recommending MCP servers a connected toolkit covers.
+- `/dt-init:machine-prep` and `/dt-init:composio` are report-only: they list plugins, MCP servers and user skills, what they cost in context, and where a connected toolkit already covers the same job, and recommend what is worth your attention. They never change anything — switching something off is your own step in your own settings. `/dt-init:find-skills` also stops recommending MCP servers a connected toolkit covers.
 - Routing once always-use is on: map first, one `COMPOSIO_SEARCH_TOOLS` per workflow, `COMPOSIO_MULTI_EXECUTE_TOOL` for independent calls, the remote workbench for bulk results, and never the plugin and a hosted MCP server together.
 - Memory stays in `/dt-init:knowledge`; Composio is a tools integration only.
 
@@ -215,7 +215,7 @@ The harness watches its own agents without spending model tokens.
 
 `/dt-init:knowledge` keeps your own standing preferences ("my standard team is 6 agents"), glossary terms (a brand and the repos in it) and cross-project lessons in a private store that is never part of the plugin.
 
-- Remote access is a separate setup: the plugin ships no bundled MCP server, so connect your own knowledge MCP server in your client MCP settings. See [the knowledge skill](../skills/knowledge/SKILL.md) for remote and local storage.
+- The knowledge store is a local folder you choose; the plugin ships no server for it and needs none. See [the knowledge skill](../skills/knowledge/SKILL.md).
 - Use plain phrases: "remember my standard is 6 agents" (set), "what is acme" (get), "anything about releases" (find), "sync my knowledge" (sync).
 - `/dt-init:setup` reads it, shows what matches the repo, and asks before applying a preference such as the agent count.
 - Nothing else reads it: no hook, no other skill.

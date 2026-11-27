@@ -1,7 +1,7 @@
 {
   "name": "dt-init",
   "displayName": "DT Init",
-  "version": "6.0.3",
+  "version": "6.0.4",
   "description": "Plan, build, review and ship software changes in Claude Code with checkpoints and a pull request receipt.",
   "author": {
     "name": "Dobeu Tech Solutions LLC",

@@ -3,11 +3,11 @@ name: loop
 description: "Research one role instruction on a frozen receipt batch with fixed token and time caps, one metric, and mechanical keep or revert. Proposes improvements for dt-init:ship; never approves effects."
 ---
 
-> Directory edition: Use Claude Code’s built-in tools. Do not execute bundled scripts or hooks or invoke package launchers. Follow the publisher’s installation documentation for any missing third-party tool. Do not read tokens or credential files from the machine. Carry out the step with Read, Edit, Grep, Glob, and git or gh, and write the files the step names.
+> Directory edition: Use Claude Code’s built-in tools only. Do not execute bundled scripts or hooks, do not install or download anything, and do not read tokens or credential files from the machine. Carry out the step with Read, Edit, Grep, Glob, and git or gh, and write the files the step names.
 
 # Loop — bounded research on one role
 
-`/dt-init:loop <experiment.json>` follows [Karpathy's autoresearch README](https://github.com/karpathy/autoresearch): one editable `train.py`, 5 minutes per training run, one metric (`val_bpb`, lower is better), then keep or discard. Here the editable surface is **one role-instruction file**, and a frozen receipt replay replaces training. This is an instruction workflow, not a bundled experiment runner. Do not claim enforcement from this document alone.
+`/dt-init:loop <experiment.json>` uses the autoresearch method, described in full here: one editable file, 5 minutes per run, one metric (`val_bpb`, lower is better), then keep or discard. Here the editable surface is **one role-instruction file**, and a frozen receipt replay replaces training. This is an instruction workflow, not a bundled experiment runner. Do not claim enforcement from this document alone.
 
 ## 1. Define and freeze the series
 

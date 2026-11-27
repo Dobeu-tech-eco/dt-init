@@ -3,7 +3,7 @@ name: autopilot
 description: "Run harness steps end to end without human plan or ship approval: a gate of three frontier models from different providers and a council for deadlocks replace the checkpoints. One branch and PR per step. Use for autopilot or run unattended."
 ---
 
-> Directory edition: Use Claude Code’s built-in tools. Do not execute bundled scripts or hooks or invoke package launchers. Follow the publisher’s installation documentation for any missing third-party tool. Do not read tokens or credential files from the machine. Carry out the step with Read, Edit, Grep, Glob, and git or gh, and write the files the step names.
+> Directory edition: Use Claude Code’s built-in tools only. Do not execute bundled scripts or hooks, do not install or download anything, and do not read tokens or credential files from the machine. Carry out the step with Read, Edit, Grep, Glob, and git or gh, and write the files the step names.
 
 # Autopilot — the harness pipeline with a consensus gate instead of a human
 

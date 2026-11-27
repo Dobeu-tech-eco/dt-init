@@ -3,7 +3,7 @@ name: go
 description: "Pick and run the next harness command from the repo's state, then repeat until a person is needed. A script chooses the route. Use when the user says go, what next, which command do I use, or take this repo forward. `status` shows the ladder; `stop` sets the stop file."
 ---
 
-> Directory edition: Use Claude Code’s built-in tools. Do not execute bundled scripts or hooks or invoke package launchers. Follow the publisher’s installation documentation for any missing third-party tool. Do not read tokens or credential files from the machine. Carry out the step with Read, Edit, Grep, Glob, and git or gh, and write the files the step names.
+> Directory edition: Use Claude Code’s built-in tools only. Do not execute bundled scripts or hooks, do not install or download anything, and do not read tokens or credential files from the machine. Carry out the step with Read, Edit, Grep, Glob, and git or gh, and write the files the step names.
 
 # Go: the next command, chosen from repo state
 

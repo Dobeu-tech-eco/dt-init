@@ -1,56 +1,30 @@
 ---
 name: composio
-description: "Connect Composio so agents reach 1000+ apps through one connection, cache the toolkit map, and offer to disable plugins, MCP servers and skills Composio already covers. Use to set up Composio or trim overlapping tools."
+description: "Explain Composio, check whether it is already connected in this Claude Code setup, and report which installed plugins, MCP servers and skills it would overlap. Report only: this skill never connects, installs, disables or removes anything. Use when the user asks about Composio or trimming overlapping tools."
 disable-model-invocation: true
 ---
 
-> Directory edition: Use Claude Code’s built-in tools. Do not execute bundled scripts or hooks or invoke package launchers. Follow the publisher’s installation documentation for any missing third-party tool. Do not read tokens or credential files from the machine. Carry out the step with Read, Edit, Grep, Glob, and git or gh, and write the files the step names.
+> Directory edition: Use Claude Code’s built-in tools only. Do not execute bundled scripts or hooks, do not install or download anything, and do not read tokens or credential files from the machine. Carry out the step with Read, Grep and Glob.
 
-# Composio — one connection for app tools
+# Composio — overlap report
 
-Composio is a third-party tools integration. Memory stays in the knowledge store (`/dt-init:knowledge`), never in Composio. Credentials are never read, printed or pasted: the CLI keeps them in its own secure config (`~/.composio`). Prune means disable or archive with a backup, never delete.
-
-All commands: `python3 -I "${CLAUDE_PLUGIN_ROOT}/scripts/composio-setup.py" <command>`. Each prints one JSON object. Exit 2 means a usage error or a missing binary; show the `hint`.
+Composio is a third-party tools integration that gives agents one authenticated connection to many apps (GitHub, Slack, Gmail, Notion, Linear and more). DT Init does not connect, configure or change Composio, and it never changes the user's other plugins, MCP servers or skills. This skill only reports.
 
 ## 1. Account question
 Ask exactly one yes/no question with AskUserQuestion: "Do you have a Composio account?"
-- **No**: write one paragraph. Composio gives agents one authenticated connection to 1000+ apps (GitHub, Slack, Gmail, Notion, Linear and more), with search, parallel execution and a remote workbench, so you stop installing a separate plugin or MCP server per app. Give the signup link https://composio.dev. Run `composio-setup.py decide --account no` and stop.
+- **No**: write one paragraph explaining what Composio is and that the user can sign up on Composio's own website if they want it. Then stop.
 - **Yes**: continue.
 
-## 2. Status and install
-Run `composio-setup.py status`. Report `cli`, `logged_in`, `plugin_enabled`, `mcp_servers`, `duplicate_connection` and the saved `decision`.
-- If `duplicate_connection` is true, warn: the plugin and a hosted MCP server would run the same connections twice. Never keep both; ask which to disable.
-- If the plugin or CLI is missing, ask once whether to proceed, then show these steps for the user to run (do not run installers silently):
-  1. `/plugin marketplace add ComposioHQ/composio-plugin-cc`
-  2. `/plugin install composio@composio`
-  3. Follow the [Composio CLI installation instructions](https://docs.composio.dev/docs/cli).
-  4. `composio login` (opens a browser). The login is the user's own secure config in `~/.composio`; never paste keys into chat or into a repo file.
-- MCP is the alternative when the user asks. Use Composio Connect at https://connect.composio.dev/mcp and sign in through Claude Code's browser authorization.
+## 2. What is already here (read-only)
+Using Read, Grep and Glob only, report:
+- Whether a Composio connection is already present in the user's own Claude Code configuration (a Composio plugin entry or MCP server entry the user added themselves). Do not add one, and do not ask the user to add one as part of this skill.
+- The installed plugins, MCP servers and skills whose job Composio's published toolkit catalogue overlaps (for example a separate GitHub, Slack or Gmail integration). Present them as a list with the overlapping toolkit named for each.
 
-## 3. Save the decision
-Run `composio-setup.py decide --account yes --connection plugin` (use `mcp` or `cli` to match what the user chose). Always-use is on by default for `--account yes`; pass `--no-always-use` only if the user opts out. It writes `~/.dts2/composio.json`; no secrets go in it.
-
-## 4. Map the catalogue
-Run `composio-setup.py map` (full toolkit catalogue and connected accounts, saved to `~/.dts2/composio-tools.json`). If the CLI is unavailable but the Composio MCP meta-tools are, call `COMPOSIO_SEARCH_TOOLS` for the user's apps, save the result to a temp JSON file `{"toolkits": [...], "connected": [...]}` and run `map --from-json <file>`. Report the toolkit count and which are connected. If `dev connected-accounts list` fails (no dev project), `map` falls back to `composio connections list` (active accounts only), and on Windows it also finds a CLI installed inside WSL.
-
-## 5. Find overlap
-1. Run `composio-setup.py overlap` (add `--all` to cover every toolkit, not only connected ones).
-2. Run the `/dt-init:machine-prep` flow's audit and plan (steps 2 and 3 of that skill) so the budget view and the Composio view agree. If a roster is already confirmed, `context_scrub.py plan` (setup Round 2d) shows duplicates across the rostered agents; do not dedupe plugins or agents before then.
-3. Show one combined list: skills, plugins and MCP servers Composio already covers, each with kind, id, toolkit and scope, plus the `kept` entries and why (Composio itself, `dts2`, the blueprint `requiredByHarness` keep, `.harness/keep.yaml` plugins).
-
-## 6. Approval gate
-Ask once: disable the listed items, pick some, or stop. Nothing changes without a yes.
-On yes run `composio-setup.py disable --ids a,b --dry-run`, show it, then run it without `--dry-run`. Report the `backups` paths, every `manual` step (for example `claude mcp remove <name> --scope user`) and the `skipped` ids. Skills move to `skills-archive`; plugins and MCP entries are switched off in settings after a timestamped backup. Never delete; to undo, restore the backup or move the folder back.
-
-## 7. Routing rule (once `always_use` is true)
-1. Check the cached tool map first (`~/.dts2/composio-tools.json`); search only when the toolkit is not in it.
-2. Call `COMPOSIO_SEARCH_TOOLS` once per workflow with a session `generate_id`, and reuse the returned `session_id` for every later meta call.
-3. Use `COMPOSIO_MULTI_EXECUTE_TOOL` for independent calls (up to 50 per call); run dependent calls in sequence.
-4. Use `COMPOSIO_REMOTE_WORKBENCH` or `COMPOSIO_REMOTE_BASH_TOOL` for bulk, large or file-based results. Each call has a 180 s limit, so checkpoint to `/mnt/files/` between calls.
-5. Never run the plugin and a hosted MCP server for Composio at the same time.
-6. Memory stays with the knowledge store (`/dt-init:knowledge`); Composio is a tools integration only.
+## 3. Report
+Give the user the overlap list and one recommendation: which overlaps are worth their attention and why. Any change — connecting Composio, or switching anything off — is the user's own action in their own settings, outside this skill. DT Init makes no change itself.
 
 ## Guardrails
-- Never read, print, copy or write API keys or the `~/.composio` contents.
-- Never delete files; disable or archive with a backup.
+- Report only. Never connect, install, disable, archive or delete anything.
+- Never read, print, copy or write API keys or credential files.
+- Memory stays in the knowledge store (`/dt-init:knowledge`); Composio is a tools integration only.
 - Keep the reply under 200 words unless the user asks for detail.

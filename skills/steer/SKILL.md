@@ -3,7 +3,7 @@ name: steer
 description: "Stop and redirect a run that is in progress. Records the new direction in the intake queue, lets in-flight atomic steps finish, checkpoints, re-plans against the new direction and resumes. Use when the person says steer, change direction, or stop and do this instead."
 ---
 
-> Directory edition: Use Claude Code’s built-in tools. Do not execute bundled scripts or hooks or invoke package launchers. Follow the publisher’s installation documentation for any missing third-party tool. Do not read tokens or credential files from the machine. Carry out the step with Read, Edit, Grep, Glob, and git or gh, and write the files the step names.
+> Directory edition: Use Claude Code’s built-in tools only. Do not execute bundled scripts or hooks, do not install or download anything, and do not read tokens or credential files from the machine. Carry out the step with Read, Edit, Grep, Glob, and git or gh, and write the files the step names.
 
 # Steer — redirect a running harness without losing work
 

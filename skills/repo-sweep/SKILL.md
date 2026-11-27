@@ -3,7 +3,7 @@ name: repo-sweep
 description: "Review every repo of a GitHub owner, oldest first, with a quick expert pass each, then clean up from one screen: keep, fold, sell as template, archive. Deleting is one repo at a time, with a backup. Use for clean up my repos or sweep my old projects."
 ---
 
-> Directory edition: Use Claude Code’s built-in tools. Do not execute bundled scripts or hooks or invoke package launchers. Follow the publisher’s installation documentation for any missing third-party tool. Do not read tokens or credential files from the machine. Carry out the step with Read, Edit, Grep, Glob, and git or gh, and write the files the step names.
+> Directory edition: Use Claude Code’s built-in tools only. Do not execute bundled scripts or hooks, do not install or download anything, and do not read tokens or credential files from the machine. Carry out the step with Read, Edit, Grep, Glob, and git or gh, and write the files the step names.
 
 # Repo-sweep — decide on all your repos in one sitting
 

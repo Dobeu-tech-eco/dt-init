@@ -12,7 +12,7 @@ Which runtimes the harness supports and the exit codes each one reports. It is f
 |---|---|---|
 | Linux | `bwrap` + `socat` | nothing extra |
 | macOS | `sandbox-exec` | nothing extra |
-| Native Windows | none (Claude Code has no OS sandbox there) | the `unsafe_no_sandbox` approval, or `--unsafe-no-sandbox` on `lanes.py spawn`. The deny hook, tool allowlist, minimal env, `--setting-sources local` and the `settings.local.json` deny rules all stay |
+| Native Windows | none (Claude Code has no OS sandbox there) | run sons under WSL2, where the sandbox applies; DT Init never starts a son without the sandbox. The deny hook, tool allowlist, minimal env, `--setting-sources local` and the `settings.local.json` deny rules all stay |
 | WSL2 | `bwrap` + `socat` | nothing extra; recommended on Windows for full sandboxing |
 | T3 Code | that of the machine the session runs on | see below |
 
@@ -23,7 +23,7 @@ T3 Code (app.t3.codes) is detected best-effort: set `DTS2_HOST=t3code`, or any v
 ## For agents
 
 - The exit-code table below must match `TIMEOUT_MAPPING` in `scripts/doctor.py`. `tests/test_batch11_report.py` fails when they differ, so change both together.
-- On native Windows `dpp` spawn needs the `unsafe_no_sandbox` approval or `--unsafe-no-sandbox`. Ask for it; never skip it, and never start a son any way but `lanes.py spawn`.
+- On native Windows there is no OS sandbox, so `dpp` sons run under WSL2; never start a son without the sandbox, and never start a son any way but `lanes.py spawn`.
 - In T3 Code, do not use T3's thread launch for sons. Use `lanes.py spawn`.
 - `doctor.py` names the auth method and never prints its value. Keep it that way in anything you write.
 - `TEAM.md` is optional. When it is absent, do not invent seats and do not call `team_charter.py` for a decision: `/dt-init:model`, lanes and the autopilot vote already assign them. When it is present, `scripts/team_charter.py` is the only reader. If it warns that a seat is unreachable, show that one line and use the agent it names, or the harness roster when the agent is null. Do not stop the run, and do not retry a connector that did not answer.
@@ -36,7 +36,7 @@ The constants live in `scripts/doctor.py` (`TIMEOUT_MAPPING`); `tests/test_batch
 |---|---|---|---|---|
 | WSL | 124 | 137 | 143 | GNU `timeout`; same as Linux |
 | Docker | 124 | 137 | 143 | 137 is also the OOM kill; `docker stop` sends SIGTERM, then SIGKILL after its grace period |
-| Native Windows | none | none | none | no POSIX signals; no `timeout`; dpp needs the `unsafe_no_sandbox` approval |
+| Native Windows | none | none | none | no POSIX signals; no `timeout`; dpp sons run under WSL2 (no unsandboxed spawn) |
 
 ## Team charter
 

@@ -3,7 +3,7 @@ name: ask-expert
 description: "Ask an expert panel whether to keep, fold, sell as a template, archive or delete one repo. Reads the code, checks your goal, votes across three model providers, and writes a one-page decision memo. Use for should I keep this repo or what do I do with this project."
 ---
 
-> Directory edition: Use Claude Code’s built-in tools. Do not execute bundled scripts or hooks or invoke package launchers. Follow the publisher’s installation documentation for any missing third-party tool. Do not read tokens or credential files from the machine. Carry out the step with Read, Edit, Grep, Glob, and git or gh, and write the files the step names.
+> Directory edition: Use Claude Code’s built-in tools only. Do not execute bundled scripts or hooks, do not install or download anything, and do not read tokens or credential files from the machine. Carry out the step with Read, Edit, Grep, Glob, and git or gh, and write the files the step names.
 
 # Ask-expert — should I keep this repo?
 
