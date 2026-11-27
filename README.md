@@ -21,11 +21,11 @@ Install DT Init from the Claude plugin directory when listed, or install it dire
 
 See the [command guide](COMMAND-GUIDE.md) for the catalog. The workflows use Claude Code tools and the repository's own checks. Git and an authenticated GitHub CLI are needed for pull request workflows.
 
-For an optional remote knowledge store, configure its HTTPS MCP endpoint and enter the bearer token in the masked Knowledge token field. See [Knowledge](skills/knowledge/SKILL.md). Report issues in the [DT Init repository](https://github.com/Dobeu-tech-eco/dt-init/issues).
+An optional remote knowledge store is a separate setup: DT Init ships no bundled MCP server, so connect your own knowledge MCP server in your Claude Code MCP settings. See [Knowledge](skills/knowledge/SKILL.md). Report issues in the [DT Init repository](https://github.com/Dobeu-tech-eco/dt-init/issues).
 
 ## For agents
 
-Use the instructions in `skills/` and the roles in `agents/`. Follow the repository's approval rules and use the receipt check in the [ship skill](skills/ship/SKILL.md). Enter remote credentials through the plugin configuration. Use `YOUR_API_KEY` in examples.
+Use the instructions in `skills/` and the roles in `agents/`. Follow the repository's approval rules and use the receipt check in the [ship skill](skills/ship/SKILL.md). Enter remote credentials through your own MCP client configuration. Use `YOUR_API_KEY` in examples.
 
 This repository publishes a one-way release export. Use `claude plugin validate --profile directory --strict .` to check the plugin locally. The directory's review runs separately.
 

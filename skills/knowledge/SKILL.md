@@ -8,6 +8,6 @@ disable-model-invocation: true
 
 # Knowledge
 
-For a Cloudflare knowledge store, configure its HTTPS MCP endpoint and bearer token in the plugin configuration. Enter the token in the masked Knowledge token field. Use the connected knowledge tools to list, find, record or remove preferences, terms and learnings when the user requests it. Confirm removals with the user. Keep credentials out of knowledge entries and conversation. Use `YOUR_API_KEY` when illustrating the token field in sample configuration.
+DT Init ships no bundled MCP server. A remote knowledge store is an optional, separate setup: deploy or choose your own knowledge MCP server (for example the Cloudflare Worker + D1 backend under `templates/knowledge-cloudflare/`) and connect it in your own Claude Code MCP settings with its HTTPS endpoint and bearer token; use `YOUR_API_KEY` in any sample configuration. When a knowledge MCP server is connected, use its tools to list, find, record or remove preferences, terms and learnings when the user requests it. Confirm removals with the user. Keep credentials out of knowledge entries and conversation.
 
 For a local or synced folder, use a folder the user identifies. Store one Markdown entry per key under entries/preference, entries/term or entries/learning. Read the store only when the user invokes this skill.

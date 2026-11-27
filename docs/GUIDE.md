@@ -215,7 +215,7 @@ The harness watches its own agents without spending model tokens.
 
 `/dt-init:knowledge` keeps your own standing preferences ("my standard team is 6 agents"), glossary terms (a brand and the repos in it) and cross-project lessons in a private store that is never part of the plugin.
 
-- Configure the HTTPS endpoint and masked Knowledge token in the plugin settings for remote access. See [the knowledge skill](../skills/knowledge/SKILL.md) for remote and local storage.
+- Remote access is a separate setup: the plugin ships no bundled MCP server, so connect your own knowledge MCP server in your client MCP settings. See [the knowledge skill](../skills/knowledge/SKILL.md) for remote and local storage.
 - Use plain phrases: "remember my standard is 6 agents" (set), "what is acme" (get), "anything about releases" (find), "sync my knowledge" (sync).
 - `/dt-init:setup` reads it, shows what matches the repo, and asks before applying a preference such as the agent count.
 - Nothing else reads it: no hook, no other skill.
